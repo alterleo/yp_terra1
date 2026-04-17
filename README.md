@@ -1,2 +1,2 @@
-# yp_terra1
-# yp_terra1
+# Yandex Practicum terraform lessons
+
