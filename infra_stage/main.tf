@@ -10,10 +10,10 @@ locals {
 
 # Создание диска и виртуальной машины
 resource "yandex_compute_disk" "boot_disk" {
-  name     = local.boot_disk_name
-  zone     = var.zone
+  name = local.boot_disk_name
+  zone = var.zone
   image_id = var.image_id
-  
+
   type = var.instance_resources.disk.disk_type
   size = var.instance_resources.disk.disk_size
 }
@@ -34,7 +34,23 @@ resource "yandex_compute_instance" "this" {
   }
 
   network_interface {
-    subnet_id = yandex_vpc_subnet.private.id
+    subnet_id      = yandex_vpc_subnet.private.id
+    nat            = true
+    nat_ip_address = yandex_vpc_address.this.external_ipv4_address[0].address
+  }
+
+  metadata = {
+      user-data = templatefile("cloud-init.yaml.tftpl", {
+        ydb_connect_string = yandex_ydb_database_serverless.this.ydb_full_endpoint,
+        bucket_domain_name = yandex_storage_bucket.this.bucket_domain_name
+      })
+    }
+}
+
+resource "yandex_vpc_address" "this" {
+  name = "${local.linux_vm_name}-address"
+  external_ipv4_address {
+    zone_id = var.zone
   }
 }
 

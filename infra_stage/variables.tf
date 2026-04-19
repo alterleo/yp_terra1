@@ -6,7 +6,7 @@ variable "name_prefix" {
 
 variable "folder_id" {
   description = "(Optional) - Yandex Cloud Folder ID where resources will be created."
-  type        = string
+  type        = string  
 }
 
 variable "zone" {

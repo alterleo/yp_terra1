@@ -1,3 +1,8 @@
+output "instance_public_ip_address" {
+  description = "The external IP address of the instance."
+  value       = yandex_compute_instance.this.network_interface.0.nat_ip_address
+}
+
 output "boot_disk_id" {
   description = "The ID of the boot disk created for the instance."
   value       = yandex_compute_disk.boot_disk.id
